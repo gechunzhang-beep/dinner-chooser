@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#f8bbd0">
     <title>蛇圆小窝</title>
     <style>
         * {
@@ -264,6 +265,73 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
+        /* 媒体查询 - 适配iPhone 15 */
+        @media (max-width: 414px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 5px;
+            }
+            
+            .nav button {
+                margin: 0 5px;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .login-container {
+                max-width: 90%;
+                margin: 50px auto;
+                padding: 20px;
+            }
+            
+            .home-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .stat-card {
+                margin: 0;
+            }
+            
+            .product-item {
+                width: 140px;
+                margin: 5px;
+                padding: 10px;
+            }
+            
+            .product-item img {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .item-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .user-info {
+                position: static;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            
+            .task-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .task-tab {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+        
         .user-info span {
             font-weight: bold;
         }
@@ -363,7 +431,7 @@
     <!-- 登录页面 -->
     <div id="login-page" class="login-container">
         <div style="text-align: center; margin-bottom: 20px;">
-            <img src="/dinner-chooser/d1e04a99d81dd61191f0a9151a5de02fd62e97d91b281c-3Q00KY.png" alt="线条小狗" style="width: 120px; height: auto; object-fit: contain;">
+            <img src="../图片/d1e04a99d81dd61191f0a9151a5de02fd62e97d91b281c-3Q00KY.png" alt="线条小狗" style="width: 120px; height: auto; object-fit: contain;">
         </div>
         <h2>进入蛇圆小窝</h2>
         <div class="form-group">
@@ -389,7 +457,7 @@
             </div>
             
             <div style="text-align: center; margin-bottom: 20px;">
-                <img src="8428e4d3889e24d9cc0517e01ddac425f2a79aceddbec-4uuf9l.png" alt="线条小狗" style="width: 150px; height: auto; object-fit: contain;">
+                <img src="../图片/8428e4d3889e24d9cc0517e01ddac425f2a79aceddbec-4uuf9l.png" alt="线条小狗" style="width: 150px; height: auto; object-fit: contain;">
             </div>
             
             <h1>蛇圆小窝</h1>
@@ -406,6 +474,25 @@
             
             <!-- 主页 -->
             <div class="section active" id="home">
+                <h2>小屋通知</h2>
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="../图片/17c39edaf5ece0557ccae61921df11fac2dcb7c21fbe4a-Il4n4i.png" alt="装饰图片" style="width: 200px; height: auto; object-fit: contain; border-radius: 10px;">
+                </div>
+                <div id="home-message">
+                    <p>欢迎来到蛇圆小窝！</p>
+                    <p>通过完成任务获得狗狗币，使用狗狗币兑换饭饭~今天也要开心哦</p>
+                </div>
+                <div id="home-message-editor" style="display: none; margin-top: 20px;">
+                    <div class="form-group">
+                        <label for="message-content">编辑通知内容</label>
+                        <textarea id="message-content" style="min-height: 100px;"></textarea>
+                    </div>
+                    <button onclick="saveHomeMessage()">保存</button>
+                    <button onclick="cancelEditHomeMessage()">取消</button>
+                </div>
+                <div id="edit-message-btn" style="margin-top: 20px; display: none;">
+                    <button onclick="editHomeMessage()">编辑通知</button>
+                </div>
                 <div class="home-stats">
                     <div class="stat-card">
                         <h3>完成任务数</h3>
@@ -425,29 +512,6 @@
                         <h3>当前时间</h3>
                         <div class="stat-value" id="current-time">--:--:--</div>
                     </div>
-                    <div class="stat-card">
-                        <h3>当日天气</h3>
-                        <div class="stat-value" id="current-weather">加载中...</div>
-                    </div>
-                </div>
-                <h2>小屋通知</h2>
-                <div style="text-align: center; margin: 20px 0;">
-                    <img src="/dinner-chooser/17c.png" alt="装饰图片" style="width: 200px; height: auto; object-fit: contain; border-radius: 10px;">
-                </div>
-                <div id="home-message">
-                    <p>欢迎来到蛇圆小窝！</p>
-                    <p>通过完成任务获得狗狗币，使用狗狗币兑换饭饭~今天也要开心哦</p>
-                </div>
-                <div id="home-message-editor" style="display: none; margin-top: 20px;">
-                    <div class="form-group">
-                        <label for="message-content">编辑通知内容</label>
-                        <textarea id="message-content" style="min-height: 100px;"></textarea>
-                    </div>
-                    <button onclick="saveHomeMessage()">保存</button>
-                    <button onclick="cancelEditHomeMessage()">取消</button>
-                </div>
-                <div id="edit-message-btn" style="margin-top: 20px; display: none;">
-                    <button onclick="editHomeMessage()">编辑通知</button>
                 </div>
             </div>
             
@@ -570,7 +634,7 @@
             <!-- 管理员主页 -->
             <div class="section" id="admin-home">
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="/dinner-chooser/63be2c3365b32d7752a9c2276649834dc1eba3fc21d0fd-EJ6svK.png" alt="管理员图片" style="width: 150px; height: auto; object-fit: contain; border-radius: 10px;">
+                    <img src="../图片/63be2c3365b32d7752a9c2276649834dc1eba3fc21d0fd-EJ6svK.png" alt="管理员图片" style="width: 150px; height: auto; object-fit: contain; border-radius: 10px;">
                 </div>
                 <h2>管理员主页</h2>
                 
@@ -738,7 +802,7 @@
         // 更新用户信息
         function updateUserInfo() {
             ensureUserData(currentUserId);
-            document.getElementById('current-user').textContent = currentUser === 'admin' ? '管理员(' + currentUserId + ')' : '普通用户(' + currentUserId + ')';
+            document.getElementById('current-user').textContent = currentUserId;
             document.getElementById('user-coins').textContent = usersData[currentUserId].coins;
             document.getElementById('remaining-coins').textContent = usersData[currentUserId].coins;
         }
@@ -1609,29 +1673,7 @@
             document.getElementById('current-time').textContent = timeString;
         }
         
-        // 获取天气信息
-        function updateWeather() {
-            // 从中国天气网获取杭州当日天气
-            const url = 'http://www.weather.com.cn/data/sk/101210101.html';
-            
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.weatherinfo) {
-                        const weather = data.weatherinfo;
-                        const weatherInfo = `${weather.weather} ${weather.temp}°C`;
-                        document.getElementById('current-weather').textContent = weatherInfo;
-                    } else {
-                        // 如果API调用失败，使用默认值
-                        document.getElementById('current-weather').textContent = '晴 16℃';
-                    }
-                })
-                .catch(error => {
-                    console.error('获取天气失败:', error);
-                    // 出错时使用默认值
-                    document.getElementById('current-weather').textContent = '晴 16℃';
-                });
-        }
+
         
         // 编辑主页通知
         function editHomeMessage() {
@@ -1721,9 +1763,8 @@
                 updateEditButton();
                 // 加载主页通知
                 loadHomeMessage();
-                // 更新时间和天气
+                // 更新时间
                 updateCurrentTime();
-                updateWeather();
             } else {
                 showLoginPage();
                 // 绑定登录事件
@@ -1735,7 +1776,4 @@
         window.onload = init;
     </script>
 </body>
-
 </html>
-
-
