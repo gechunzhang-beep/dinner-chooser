@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蛇圆小窝</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            background-image: linear-gradient(to bottom, #f8f9fa, #e3f2fd);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav button {
+            margin: 0 10px;
+            padding: 12px 24px;
+            border: none;
+            background-color: #f8bbd0;
+            color: #333;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .nav button:hover {
+            background-color: #f48fb1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .nav button.active {
+            background-color: #f06292;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .nav button.admin-btn {
+            display: none;
+        }
+        
+        .nav button.admin-btn.show {
+            display: inline-block;
+        }
+        
+        .section {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #f8bbd0;
+            color: #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #f48fb1;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .list {
+            margin-top: 20px;
+        }
+        
+        .item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .item h3 {
+            margin-bottom: 10px;
+        }
+        
+        .item p {
+            margin-bottom: 10px;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-secondary {
+            background-color: #e1bee7;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #ce93d8;
+        }
+        
+        .btn-danger {
+            background-color: #ef9a9a;
+            color: #333;
+        }
+        
+        .btn-danger:hover {
+            background-color: #e57373;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .badge-pending {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        .badge-completed {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .badge-approved {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        .badge-expired {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .product-item {
+            display: inline-block;
+            width: 200px;
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .product-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+        
+        .product-stock {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .product-calories {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .user-info span {
+            font-weight: bold;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .login-container button {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .main-content {
+            display: none;
+        }
+        
+        .main-content.active {
+            display: block;
+        }
+        
+        .home-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .stat-card h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .task-image {
+            max-width: 200px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .task-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .task-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #333;
+            font-size: 16px;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .task-tab.active {
+            border-bottom-color: #4CAF50;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .task-content {
+            display: none;
+        }
+        
+        .task-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页面 -->
+    <div id="login-page" class="login-container">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="../图片/d1e04a99d81dd61191f0a9151a5de02fd62e97d91b281c-3Q00KY.png" alt="线条小狗" style="width: 120px; height: auto; object-fit: contain;">
+        </div>
+        <h2>进入蛇圆小窝</h2>
+        <div class="form-group">
+            <label for="login-id">用户名</label>
+            <input type="text" id="login-id" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <label for="login-password">密码</label>
+            <input type="password" id="login-password" placeholder="请输入密码">
+        </div>
+        <button id="login-button">登录</button>
+    </div>
+    
+    <!-- 主内容 -->
+    <div id="main-content" class="main-content">
+        <div class="container">
+            <div class="user-info">
+                <span>用户: </span><span id="current-user">普通用户</span>
+                <br>
+                <span>狗狗币: </span><span id="user-coins">0</span>
+                <br>
+                <button id="logout-button" style="margin-top: 10px; padding: 5px 10px; font-size: 12px;">退出登录</button>
+            </div>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="../图片/8428e4d3889e24d9cc0517e01ddac425f2a79aceddbec-4uuf9l.png" alt="线条小狗" style="width: 150px; height: auto; object-fit: contain;">
+            </div>
+            
+            <h1>蛇圆小窝</h1>
+            
+            <div class="nav">
+                <button class="active" data-section="home">主页</button>
+                <button data-section="tasks">任务管理</button>
+                <button data-section="shop">蛇圆小餐厅</button>
+                <button data-section="cart">购物车</button>
+                <button class="admin-btn" data-section="admin-tasks">管理员任务管理</button>
+                <button class="admin-btn" data-section="admin-shop">管理员商城管理</button>
+                <button class="admin-btn" data-section="admin-home">管理员主页</button>
+            </div>
+            
+            <!-- 主页 -->
+            <div class="section active" id="home">
+                <div class="home-stats">
+                    <div class="stat-card">
+                        <h3>完成任务数</h3>
+                        <div class="stat-value" id="completed-tasks-count">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>今日卡路里消耗</h3>
+                        <div class="stat-value" id="today-calories">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>剩余狗狗币</h3>
+                        <div class="stat-value" id="remaining-coins">0</div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                    <div class="stat-card">
+                        <h3>当前时间</h3>
+                        <div class="stat-value" id="current-time">--:--:--</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>当日天气</h3>
+                        <div class="stat-value" id="current-weather">加载中...</div>
+                    </div>
+                </div>
+                <h2>小屋通知</h2>
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="../图片/17c39edaf5ece0557ccae61921df11fac2dcb7c21fbe4a-Il4n4i.png" alt="装饰图片" style="width: 200px; height: auto; object-fit: contain; border-radius: 10px;">
+                </div>
+                <div id="home-message">
+                    <p>欢迎来到蛇圆小窝！</p>
+                    <p>通过完成任务获得狗狗币，使用狗狗币兑换饭饭~今天也要开心哦</p>
+                </div>
+                <div id="home-message-editor" style="display: none; margin-top: 20px;">
+                    <div class="form-group">
+                        <label for="message-content">编辑通知内容</label>
+                        <textarea id="message-content" style="min-height: 100px;"></textarea>
+                    </div>
+                    <button onclick="saveHomeMessage()">保存</button>
+                    <button onclick="cancelEditHomeMessage()">取消</button>
+                </div>
+                <div id="edit-message-btn" style="margin-top: 20px; display: none;">
+                    <button onclick="editHomeMessage()">编辑通知</button>
+                </div>
+            </div>
+            
+            <!-- 任务管理 -->
+            <div class="section" id="tasks">
+                <h2>任务管理</h2>
+                <div class="task-tabs">
+                    <button class="task-tab active" data-tab="daily">每日任务</button>
+                    <button class="task-tab" data-tab="current">当前任务</button>
+                    <button class="task-tab" data-tab="completed">已完成任务</button>
+                </div>
+                
+                <!-- 每日任务 -->
+                <div class="task-content active" id="daily-tasks">
+                    <div id="daily-tasks-list" class="list">
+                        <!-- 每日任务将在这里动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 当前任务 -->
+                <div class="task-content" id="current-tasks">
+                    <div id="current-tasks-list" class="list">
+                        <!-- 当前任务将在这里动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 已完成任务 -->
+                <div class="task-content" id="completed-tasks">
+                    <div id="completed-tasks-list" class="list">
+                        <!-- 已完成任务将在这里动态生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 商城 -->
+            <div class="section" id="shop">
+                <h2>蛇圆小餐厅</h2>
+                <div id="products-list">
+                    <!-- 商品将在这里动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 购物车 -->
+            <div class="section" id="cart">
+                <h2>购物车</h2>
+                <div id="cart-items" class="list">
+                    <!-- 购物车商品将在这里动态生成 -->
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 4px;">
+                    <h3>总计: <span id="cart-total">0</span> 狗狗币</h3>
+                    <button id="checkout-button" style="margin-top: 10px;">结账</button>
+                </div>
+            </div>
+            
+            <!-- 管理员任务管理 -->
+            <div class="section" id="admin-tasks">
+                <h2>发布新任务</h2>
+                <div class="form-group">
+                    <label for="task-title">任务标题</label>
+                    <input type="text" id="task-title" placeholder="输入任务标题">
+                </div>
+                <div class="form-group">
+                    <label for="task-description">任务描述</label>
+                    <textarea id="task-description" placeholder="输入任务描述"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="task-reward">任务奖励(狗狗币)</label>
+                    <input type="number" id="task-reward" placeholder="输入奖励数量" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="task-type">任务类型</label>
+                    <select id="task-type">
+                        <option value="normal">普通任务</option>
+                        <option value="daily">每日任务</option>
+                    </select>
+                </div>
+                <div class="form-group" id="task-date" style="display: none;">
+                    <label for="task-date-input">任务日期</label>
+                    <input type="date" id="task-date-input">
+                </div>
+                <button id="create-task">发布任务</button>
+                
+                <h2 style="margin-top: 30px;">待确认任务</h2>
+                <div id="pending-tasks" class="list">
+                    <!-- 待确认任务将在这里动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 管理员商城管理 -->
+            <div class="section" id="admin-shop">
+                <h2>添加新商品</h2>
+                <div class="form-group">
+                    <label for="product-name">商品名称</label>
+                    <input type="text" id="product-name" placeholder="输入商品名称">
+                </div>
+                <div class="form-group">
+                    <label for="product-price">商品价格(狗狗币)</label>
+                    <input type="number" id="product-price" placeholder="输入价格" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="product-stock">商品库存</label>
+                    <input type="number" id="product-stock" placeholder="输入库存" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="product-calories">卡路里消耗</label>
+                    <input type="number" id="product-calories" placeholder="输入卡路里消耗" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="product-image">商品图片</label>
+                    <input type="file" id="product-image" accept="image/*">
+                </div>
+                <button id="add-product">添加商品</button>
+                
+                <h2 style="margin-top: 30px;">商品管理</h2>
+                <div id="admin-products" class="list">
+                    <!-- 商品将在这里动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 管理员主页 -->
+            <div class="section" id="admin-home">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="../图片/63be2c3365b32d7752a9c2276649834dc1eba3fc21d0fd-EJ6svK.png" alt="管理员图片" style="width: 150px; height: auto; object-fit: contain; border-radius: 10px;">
+                </div>
+                <h2>管理员主页</h2>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3>今日需做</h3>
+                    <div id="admin-todo-list" class="list">
+                        <!-- 今日需做将在这里动态生成 -->
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3>商品库存预警</h3>
+                    <div id="stock-alerts" class="list">
+                        <!-- 库存预警将在这里动态生成 -->
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3>待审核任务</h3>
+                    <div id="admin-pending-tasks" class="list">
+                        <!-- 待审核任务将在这里动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 任务提交模态框 -->
+    <div id="task-submit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
+            <h3>提交任务</h3>
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button onclick="closeTaskSubmitModal()">取消</button>
+                <button onclick="submitTask()">提交</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 任务拒绝模态框 -->
+    <div id="task-reject-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
+            <h3>拒绝任务</h3>
+            <div class="form-group">
+                <label for="reject-reason">拒绝原因</label>
+                <textarea id="reject-reason" placeholder="请输入拒绝原因" style="min-height: 100px;"></textarea>
+            </div>
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button onclick="closeTaskRejectModal()">取消</button>
+                <button onclick="confirmRejectTask()">确认拒绝</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== 数据存储 ====================
+        const STORAGE_KEYS = {
+            TASKS: 'tasks',
+            PRODUCTS: 'products',
+            USERS_DATA: 'usersData',
+            SUBMISSIONS: 'submissions',
+            IS_LOGGED_IN: 'isLoggedIn',
+            CURRENT_USER: 'currentUser',
+            CURRENT_USER_ID: 'currentUserId',
+            PURCHASES: 'purchases'
+        };
+        
+        // 初始化数据
+        let tasks = JSON.parse(localStorage.getItem(STORAGE_KEYS.TASKS)) || [];
+        let products = JSON.parse(localStorage.getItem(STORAGE_KEYS.PRODUCTS)) || [];
+        let usersData = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_DATA)) || {};
+        let submissions = JSON.parse(localStorage.getItem(STORAGE_KEYS.SUBMISSIONS)) || [];
+        let isLoggedIn = localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
+        let currentUser = localStorage.getItem(STORAGE_KEYS.CURRENT_USER) || 'user';
+        let currentUserId = localStorage.getItem(STORAGE_KEYS.CURRENT_USER_ID) || '';
+        let purchases = JSON.parse(localStorage.getItem(STORAGE_KEYS.PURCHASES)) || [];
+        
+        // 临时变量
+        let currentTaskId = '';
+        let currentRejectTaskId = '';
+        
+        // 登录验证
+        const users = {
+            '圆圆': { password: '123456', role: 'user' },
+            '蛇蛇': { password: '122134xxx', role: 'admin' }
+        };
+        
+        // ==================== 工具函数 ====================
+        
+        // 确保用户数据存在
+        function ensureUserData(userId) {
+            if (!usersData[userId]) {
+                usersData[userId] = {
+                    coins: 0,
+                    cart: []
+                };
+                saveData(STORAGE_KEYS.USERS_DATA, usersData);
+            }
+        }
+        
+        // 保存数据到localStorage
+        function saveData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+        
+        // 显示通知
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // 通知管理员
+        function notifyAdmin(message) {
+            if (currentUser === 'admin') {
+                showNotification('系统通知: ' + message);
+            }
+        }
+        
+        // ==================== 初始化和用户界面 ====================
+        
+        // 初始化
+        function init() {
+            if (isLoggedIn) {
+                showMainContent();
+                updateUserInfo();
+                renderHome();
+                renderTasks();
+                renderProducts();
+                renderPendingTasks();
+                renderAdminProducts();
+                // 根据角色显示/隐藏管理员功能
+                updateAdminAccess();
+                // 检查过期任务
+                checkExpiredTasks();
+                // 绑定事件
+                bindEvents();
+            } else {
+                showLoginPage();
+                // 绑定登录事件
+                bindLoginEvents();
+            }
+        }
+        
+        // 显示登录页面
+        function showLoginPage() {
+            document.getElementById('login-page').style.display = 'block';
+            document.getElementById('main-content').classList.remove('active');
+        }
+        
+        // 显示主内容
+        function showMainContent() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('main-content').classList.add('active');
+        }
+        
+        // 更新用户信息
+        function updateUserInfo() {
+            ensureUserData(currentUserId);
+            document.getElementById('current-user').textContent = currentUser === 'admin' ? '管理员(' + currentUserId + ')' : '普通用户(' + currentUserId + ')';
+            document.getElementById('user-coins').textContent = usersData[currentUserId].coins;
+            document.getElementById('remaining-coins').textContent = usersData[currentUserId].coins;
+        }
+        
+        // 更新管理员访问权限
+        function updateAdminAccess() {
+            const adminButtons = document.querySelectorAll('.admin-btn');
+            const adminSections = document.querySelectorAll('#admin-tasks, #admin-shop, #admin-home');
+            
+            adminButtons.forEach(button => {
+                if (currentUserId === '蛇蛇') {
+                    button.classList.add('show');
+                } else {
+                    button.classList.remove('show');
+                }
+            });
+            
+            adminSections.forEach(section => {
+                if (currentUserId === '蛇蛇') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+            
+            if (currentUserId !== '蛇蛇') {
+                const homeButton = document.querySelector('.nav button[data-section="home"]');
+                if (homeButton) {
+                    homeButton.click();
+                }
+            }
+        }
+        
+        // 绑定事件
+        function bindEvents() {
+            // 结账按钮事件
+            document.getElementById('checkout-button').addEventListener('click', checkout);
+            
+            // 导航切换
+            document.querySelectorAll('.nav button[data-section]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // 检查是否是管理员页面，如果是且用户不是管理员，则不允许访问
+                    const adminSections = ['admin-tasks', 'admin-shop', 'admin-home'];
+                    if (adminSections.includes(sectionId) && currentUserId !== '蛇蛇') {
+                        showNotification('权限不足，无法访问管理员页面');
+                        return;
+                    }
+                    
+                    // 移除所有活动状态
+                    document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+                    
+                    // 添加活动状态
+                    this.classList.add('active');
+                    document.getElementById(sectionId).classList.add('active');
+                    
+                    // 如果切换到主页，重新渲染
+                    if (sectionId === 'home') {
+                        renderHome();
+                    } else if (sectionId === 'tasks') {
+                        renderTasks();
+                    } else if (sectionId === 'cart') {
+                        renderCart();
+                    } else if (sectionId === 'admin-home') {
+                        renderAdminHome();
+                    }
+                });
+            });
+            
+            // 任务标签切换
+            document.querySelectorAll('.task-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有活动状态
+                    document.querySelectorAll('.task-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.task-content').forEach(content => content.classList.remove('active'));
+                    
+                    // 添加活动状态
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId + '-tasks').classList.add('active');
+                });
+            });
+            
+            // 任务类型切换
+            document.getElementById('task-type').addEventListener('change', function() {
+                if (this.value === 'daily') {
+                    document.getElementById('task-date').style.display = 'block';
+                } else {
+                    document.getElementById('task-date').style.display = 'none';
+                }
+            });
+            
+            // 退出登录按钮事件
+            document.getElementById('logout-button').addEventListener('click', logout);
+            
+            // 创建任务按钮事件
+            document.getElementById('create-task').addEventListener('click', createTask);
+            
+            // 添加商品按钮事件
+            document.getElementById('add-product').addEventListener('click', addProduct);
+        }
+        
+        // 绑定登录相关事件
+        function bindLoginEvents() {
+            // 登录按钮事件
+            document.getElementById('login-button').addEventListener('click', login);
+            
+            // 回车键登录
+            document.getElementById('login-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+        }
+        
+        // 渲染主页
+        function renderHome() {
+            // 计算完成任务数
+            const completedTasks = submissions.filter(sub => sub.userId === currentUserId && sub.status === 'approved').length;
+            document.getElementById('completed-tasks-count').textContent = completedTasks;
+            
+            // 计算今日卡路里消耗
+            const today = new Date().toISOString().split('T')[0];
+            const todayPurchases = purchases.filter(p => p.userId === currentUserId && p.purchaseDate.startsWith(today));
+            const todayCalories = todayPurchases.reduce((total, purchase) => {
+                const product = products.find(p => p.id === purchase.productId);
+                return total + (product ? product.calories || 0 : 0);
+            }, 0);
+            document.getElementById('today-calories').textContent = todayCalories;
+            
+            // 更新剩余狗狗币
+            ensureUserData(currentUserId);
+            document.getElementById('remaining-coins').textContent = usersData[currentUserId].coins;
+        }
+        
+        // 检查过期任务
+        function checkExpiredTasks() {
+            const now = new Date().getTime();
+            tasks = tasks.filter(task => {
+                if (task.type === 'daily' && task.endTime) {
+                    const endTime = new Date(task.endTime).getTime();
+                    const sixHoursLater = endTime + 6 * 60 * 60 * 1000;
+                    return now < sixHoursLater;
+                }
+                return true;
+            });
+            saveData(STORAGE_KEYS.TASKS, tasks);
+            renderTasks();
+        }
+        
+        // 渲染任务列表
+        function renderTasks() {
+            const dailyTasksList = document.getElementById('daily-tasks-list');
+            const currentTasksList = document.getElementById('current-tasks-list');
+            const completedTasksList = document.getElementById('completed-tasks-list');
+            
+            dailyTasksList.innerHTML = '';
+            currentTasksList.innerHTML = '';
+            completedTasksList.innerHTML = '';
+            
+            const now = new Date().getTime();
+            
+            tasks.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'item';
+                
+                // 检查用户是否已提交此任务
+                const hasSubmitted = submissions.some(sub => sub.taskId === task.id && sub.userId === currentUserId);
+                const isApproved = submissions.some(sub => sub.taskId === task.id && sub.userId === currentUserId && sub.status === 'approved');
+                
+                // 检查是否过期
+                let isExpired = false;
+                let isWithinTimeRange = true;
+                if (task.type === 'daily' && task.startTime && task.endTime) {
+                    const startTime = new Date(task.startTime).getTime();
+                    const endTime = new Date(task.endTime).getTime();
+                    isExpired = now > endTime;
+                    isWithinTimeRange = now >= startTime && now <= endTime;
+                }
+                
+                let taskHTML = `
+                    <h3>${task.title}</h3>
+                    <p>${task.description}</p>
+                    <p>奖励: ${task.reward} 狗狗币${task.type === 'daily' ? ' (双倍奖励)' : ''}</p>
+                `;
+                
+                if (task.type === 'daily') {
+                    taskHTML += `
+                        <p>时间范围: ${new Date(task.startTime).toLocaleString()} 至 ${new Date(task.endTime).toLocaleString()}</p>
+                    `;
+                }
+                
+                if (isExpired) {
+                    taskHTML += '<span class="badge badge-expired">已过期</span>';
+                } else if (hasSubmitted) {
+                    taskHTML += '<span class="badge badge-pending">审核中</span>';
+                } else if (isApproved) {
+                    taskHTML += '<span class="badge badge-completed">已完成</span>';
+                }
+                
+                if (!isExpired && !hasSubmitted && !isApproved) {
+                    taskHTML += `
+                        <div class="item-actions">
+                            <button class="btn-secondary" onclick="openTaskSubmitModal('${task.id}')">提交任务</button>
+                        </div>
+                    `;
+                }
+                
+                taskItem.innerHTML = taskHTML;
+                
+                if (task.type === 'daily') {
+                    // 每日任务只在时间范围内显示
+                    if (isWithinTimeRange) {
+                        dailyTasksList.appendChild(taskItem);
+                    }
+                } else if (isApproved) {
+                    completedTasksList.appendChild(taskItem);
+                } else {
+                    currentTasksList.appendChild(taskItem);
+                }
+            });
+        }
+        
+        // 渲染商品列表
+        function renderProducts() {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '';
+            
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                
+                productItem.innerHTML = `
+                    <img src="${product.image || './placeholder.png'}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <div class="product-price">${product.price} 狗狗币</div>
+                    <div class="product-stock">库存: ${product.stock}</div>
+                    <div class="product-calories">卡路里: ${product.calories || 0}</div>
+                    <button ${product.stock > 0 ? '' : 'disabled'} onclick="addToCart('${product.id}')">添加到购物车</button>
+                `;
+                
+                productsList.appendChild(productItem);
+            });
+        }
+        
+        // 渲染待确认任务
+        function renderPendingTasks() {
+            const pendingTasksList = document.getElementById('pending-tasks');
+            pendingTasksList.innerHTML = '';
+            
+            const pendingSubmissions = submissions.filter(sub => sub.status === 'pending');
+            
+            pendingSubmissions.forEach(sub => {
+                const task = tasks.find(t => t.id === sub.taskId);
+                if (task) {
+                    const taskItem = document.createElement('div');
+                    taskItem.className = 'item';
+                    
+                    taskItem.innerHTML = `
+                        <h3>${task.title}</h3>
+                        <p>${task.description}</p>
+                        <p>奖励: ${task.reward} 狗狗币${task.type === 'daily' ? ' (双倍奖励)' : ''}</p>
+                        <p>提交用户: ${sub.userId}</p>
+                        <div class="item-actions">
+                            <button class="btn-secondary" onclick="approveTask('${sub.id}')">确认完成</button>
+                            <button class="btn-danger" onclick="rejectTask('${sub.id}')">拒绝</button>
+                        </div>
+                    `;
+                    
+                    pendingTasksList.appendChild(taskItem);
+                }
+            });
+        }
+        
+        // 渲染管理员商品列表
+        function renderAdminProducts() {
+            const adminProductsList = document.getElementById('admin-products');
+            adminProductsList.innerHTML = '';
+            
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'item';
+                
+                productItem.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>价格: ${product.price} 狗狗币</p>
+                    <p>库存: ${product.stock}</p>
+                    <p>卡路里: ${product.calories || 0}</p>
+                    ${product.image ? `<img src="${product.image}" class="task-image">` : ''}
+                    <div class="form-group">
+                        <label for="price-${product.id}">新价格</label>
+                        <input type="number" id="price-${product.id}" value="${product.price}" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="stock-${product.id}">新库存</label>
+                        <input type="number" id="stock-${product.id}" value="${product.stock}" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="calories-${product.id}">新卡路里</label>
+                        <input type="number" id="calories-${product.id}" value="${product.calories || 0}" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="image-${product.id}">新图片</label>
+                        <input type="file" id="image-${product.id}" accept="image/*">
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-secondary" onclick="updateProduct('${product.id}')">更新</button>
+                        <button class="btn-danger" onclick="deleteProduct('${product.id}')">删除</button>
+                    </div>
+                `;
+                
+                adminProductsList.appendChild(productItem);
+            });
+        }
+        
+        // 登录
+        function login() {
+            const userId = document.getElementById('login-id').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (users[userId] && users[userId].password === password) {
+                // 确保用户数据存在
+                ensureUserData(userId);
+                
+                currentUser = users[userId].role;
+                currentUserId = userId;
+                isLoggedIn = true;
+                saveData(STORAGE_KEYS.CURRENT_USER, currentUser);
+                saveData(STORAGE_KEYS.CURRENT_USER_ID, currentUserId);
+                saveData(STORAGE_KEYS.IS_LOGGED_IN, 'true');
+                
+                showMainContent();
+                updateUserInfo();
+                renderHome();
+                renderTasks();
+                renderProducts();
+                renderPendingTasks();
+                renderAdminProducts();
+                updateAdminAccess();
+                checkExpiredTasks();
+                bindEvents();
+                
+                showNotification('登录成功');
+            } else {
+                showNotification('用户名或密码错误');
+            }
+        }
+        
+        // 退出登录
+        function logout() {
+            isLoggedIn = false;
+            currentUser = 'user';
+            currentUserId = '';
+            saveData(STORAGE_KEYS.IS_LOGGED_IN, 'false');
+            saveData(STORAGE_KEYS.CURRENT_USER, 'user');
+            saveData(STORAGE_KEYS.CURRENT_USER_ID, '');
+            showLoginPage();
+            showNotification('已退出登录');
+        }
+        
+        // 打开任务提交模态框
+        function openTaskSubmitModal(taskId) {
+            currentTaskId = taskId;
+            document.getElementById('task-submit-modal').style.display = 'block';
+        }
+        
+        // 关闭任务提交模态框
+        function closeTaskSubmitModal() {
+            document.getElementById('task-submit-modal').style.display = 'none';
+            currentTaskId = '';
+        }
+        
+        // 提交任务
+        function submitTask() {
+            const submission = {
+                id: Date.now().toString(),
+                taskId: currentTaskId,
+                userId: currentUserId,
+                status: 'pending',
+                submittedAt: new Date().toISOString()
+            };
+            
+            submissions.push(submission);
+            saveData(STORAGE_KEYS.SUBMISSIONS, submissions);
+            renderTasks();
+            closeTaskSubmitModal();
+            showNotification('任务已提交，等待管理员确认');
+        }
+        
+        // 确认任务
+        function approveTask(submissionId) {
+            const submission = submissions.find(sub => sub.id === submissionId);
+            if (submission) {
+                submission.status = 'approved';
+                const task = tasks.find(t => t.id === submission.taskId);
+                if (task) {
+                    // 每日任务双倍奖励
+                    const reward = task.type === 'daily' ? task.reward * 2 : task.reward;
+                    ensureUserData(submission.userId);
+                    usersData[submission.userId].coins += reward;
+                    saveData(STORAGE_KEYS.USERS_DATA, usersData);
+                }
+                saveData(STORAGE_KEYS.SUBMISSIONS, submissions);
+                renderPendingTasks();
+                renderAdminPendingTasks();
+                // 如果当前登录用户是任务提交者，更新用户信息
+                if (currentUserId === submission.userId) {
+                    updateUserInfo();
+                    renderHome();
+                }
+                showNotification('任务已确认，用户已获得奖励');
+            }
+        }
+        
+        // 拒绝任务
+        function rejectTask(submissionId) {
+            const submission = submissions.find(sub => sub.id === submissionId);
+            if (submission) {
+                submission.status = 'rejected';
+                saveData(STORAGE_KEYS.SUBMISSIONS, submissions);
+                renderPendingTasks();
+                renderAdminPendingTasks();
+                showNotification('任务已拒绝');
+            }
+        }
+        
+        // 创建任务
+        function createTask() {
+            const title = document.getElementById('task-title').value;
+            const description = document.getElementById('task-description').value;
+            const reward = parseInt(document.getElementById('task-reward').value);
+            const type = document.getElementById('task-type').value;
+            const taskDate = document.getElementById('task-date-input').value;
+            
+            if (!title || !description || !reward) {
+                showNotification('请填写所有字段');
+                return;
+            }
+            
+            if (type === 'daily' && !taskDate) {
+                showNotification('请设置每日任务的日期');
+                return;
+            }
+            
+            let startTime = '';
+            let endTime = '';
+            
+            if (type === 'daily') {
+                // 设置为当天的00:00:01至23:59:59
+                startTime = taskDate + 'T00:00:01';
+                endTime = taskDate + 'T23:59:59';
+            }
+            
+            const task = {
+                id: Date.now().toString(),
+                title: title,
+                description: description,
+                reward: reward,
+                type: type,
+                startTime: startTime,
+                endTime: endTime,
+                createdAt: new Date().toISOString()
+            };
+            
+            tasks.push(task);
+            saveData(STORAGE_KEYS.TASKS, tasks);
+            renderTasks();
+            
+            // 清空表单
+            document.getElementById('task-title').value = '';
+            document.getElementById('task-description').value = '';
+            document.getElementById('task-reward').value = '';
+            document.getElementById('task-type').value = 'normal';
+            document.getElementById('task-date-input').value = '';
+            document.getElementById('task-date').style.display = 'none';
+            
+            showNotification('任务已发布');
+        }
+        
+        // 添加商品
+        function addProduct() {
+            const name = document.getElementById('product-name').value;
+            const price = parseInt(document.getElementById('product-price').value);
+            const stock = parseInt(document.getElementById('product-stock').value);
+            const calories = parseInt(document.getElementById('product-calories').value) || 0;
+            const fileInput = document.getElementById('product-image');
+            const file = fileInput.files[0];
+            
+            if (!name || !price || !stock) {
+                showNotification('请填写所有字段');
+                return;
+            }
+            
+            if (!file) {
+                showNotification('请上传商品图片');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                
+                const product = {
+                    id: Date.now().toString(),
+                    name: name,
+                    price: price,
+                    stock: stock,
+                    calories: calories,
+                    image: imageData,
+                    createdAt: new Date().toISOString()
+                };
+                
+                products.push(product);
+                saveData(STORAGE_KEYS.PRODUCTS, products);
+                renderProducts();
+                renderAdminProducts();
+                
+                // 清空表单
+                document.getElementById('product-name').value = '';
+                document.getElementById('product-price').value = '';
+                document.getElementById('product-stock').value = '';
+                document.getElementById('product-calories').value = '';
+                document.getElementById('product-image').value = '';
+                
+                showNotification('商品已添加');
+                notifyAdmin('新商品已添加: ' + name);
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 更新商品
+        function updateProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                const newPrice = parseInt(document.getElementById(`price-${productId}`).value);
+                const newStock = parseInt(document.getElementById(`stock-${productId}`).value);
+                const newCalories = parseInt(document.getElementById(`calories-${productId}`).value) || 0;
+                const fileInput = document.getElementById(`image-${productId}`);
+                const file = fileInput.files[0];
+                
+                if (newPrice && newStock >= 0) {
+                    product.price = newPrice;
+                    product.stock = newStock;
+                    product.calories = newCalories;
+                    
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            product.image = e.target.result;
+                            saveData(STORAGE_KEYS.PRODUCTS, products);
+                            renderProducts();
+                            renderAdminProducts();
+                            showNotification('商品已更新');
+                            notifyAdmin('商品已更新: ' + product.name);
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        saveData(STORAGE_KEYS.PRODUCTS, products);
+                        renderProducts();
+                        renderAdminProducts();
+                        showNotification('商品已更新');
+                        notifyAdmin('商品已更新: ' + product.name);
+                    }
+                } else {
+                    showNotification('请输入有效的价格和库存');
+                }
+            }
+        }
+        
+        // 删除商品
+        function deleteProduct(productId) {
+            if (confirm('确定要删除这个商品吗？')) {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    products = products.filter(p => p.id !== productId);
+                    saveData(STORAGE_KEYS.PRODUCTS, products);
+                    renderProducts();
+                    renderAdminProducts();
+                    showNotification('商品已删除');
+                    notifyAdmin('商品已删除: ' + product.name);
+                }
+            }
+        }
+        
+        // 添加商品到购物车
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                if (product.stock > 0) {
+                    ensureUserData(currentUserId);
+                    
+                    const existingItem = usersData[currentUserId].cart.find(item => item.productId === productId);
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        usersData[currentUserId].cart.push({
+                            productId: productId,
+                            quantity: 1,
+                            price: product.price
+                        });
+                    }
+                    
+                    saveData(STORAGE_KEYS.USERS_DATA, usersData);
+                    showNotification('商品已添加到购物车');
+                } else {
+                    showNotification('商品库存不足');
+                }
+            }
+        }
+        
+        // 渲染购物车
+        function renderCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            
+            cartItems.innerHTML = '';
+            let total = 0;
+            
+            ensureUserData(currentUserId);
+            
+            if (!usersData[currentUserId].cart || usersData[currentUserId].cart.length === 0) {
+                cartItems.innerHTML = '<p>购物车为空</p>';
+                cartTotal.textContent = '0';
+                return;
+            }
+            
+            usersData[currentUserId].cart.forEach(item => {
+                const product = products.find(p => p.id === item.productId);
+                if (product) {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'item';
+                    cartItem.innerHTML = `
+                        <h3>${product.name}</h3>
+                        <p>价格: ${item.price} 狗狗币</p>
+                        <p>数量: ${item.quantity}</p>
+                        <p>小计: ${itemTotal} 狗狗币</p>
+                        <div class="item-actions">
+                            <button class="btn-secondary" onclick="updateCartItem('${item.productId}', 1)">+</button>
+                            <button class="btn-secondary" onclick="updateCartItem('${item.productId}', -1)">-</button>
+                            <button class="btn-danger" onclick="removeFromCart('${item.productId}')">删除</button>
+                        </div>
+                    `;
+                    cartItems.appendChild(cartItem);
+                }
+            });
+            
+            cartTotal.textContent = total;
+        }
+        
+        // 更新购物车商品数量
+        function updateCartItem(productId, change) {
+            ensureUserData(currentUserId);
+            const item = usersData[currentUserId].cart.find(item => item.productId === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    saveData(STORAGE_KEYS.USERS_DATA, usersData);
+                    renderCart();
+                }
+            }
+        }
+        
+        // 从购物车移除商品
+        function removeFromCart(productId) {
+            ensureUserData(currentUserId);
+            usersData[currentUserId].cart = usersData[currentUserId].cart.filter(item => item.productId !== productId);
+            saveData(STORAGE_KEYS.USERS_DATA, usersData);
+            renderCart();
+        }
+        
+        // 结账
+        function checkout() {
+            ensureUserData(currentUserId);
+            
+            if (!usersData[currentUserId].cart || usersData[currentUserId].cart.length === 0) {
+                showNotification('购物车为空');
+                return;
+            }
+            
+            // 计算总金额
+            let total = 0;
+            const itemsToPurchase = [];
+            
+            for (const item of usersData[currentUserId].cart) {
+                const product = products.find(p => p.id === item.productId);
+                if (product) {
+                    if (product.stock < item.quantity) {
+                        showNotification(`商品 ${product.name} 库存不足`);
+                        return;
+                    }
+                    total += item.price * item.quantity;
+                    itemsToPurchase.push({ product, quantity: item.quantity });
+                }
+            }
+            
+            if (usersData[currentUserId].coins < total) {
+                showNotification('狗狗币不足');
+                return;
+            }
+            
+            // 执行购买
+            usersData[currentUserId].coins -= total;
+            
+            for (const { product, quantity } of itemsToPurchase) {
+                product.stock -= quantity;
+                
+                // 记录购买记录
+                for (let i = 0; i < quantity; i++) {
+                    const purchase = {
+                        id: Date.now().toString() + i,
+                        productId: product.id,
+                        userId: currentUserId,
+                        purchaseDate: new Date().toISOString()
+                    };
+                    purchases.push(purchase);
+                }
+                
+                notifyAdmin('商品已被购买: ' + product.name + ' x' + quantity);
+            }
+            
+            // 清空购物车
+            usersData[currentUserId].cart = [];
+            
+            // 保存数据
+            saveData(STORAGE_KEYS.USERS_DATA, usersData);
+            saveData(STORAGE_KEYS.PRODUCTS, products);
+            saveData(STORAGE_KEYS.PURCHASES, purchases);
+            
+            // 更新UI
+            renderCart();
+            renderProducts();
+            updateUserInfo();
+            renderHome();
+            showNotification('结账成功');
+        }
+        
+        // 渲染管理员主页
+        function renderAdminHome() {
+            // 渲染今日需做
+            renderAdminTodoList();
+            // 渲染库存预警
+            renderStockAlerts();
+            // 渲染待审核任务
+            renderAdminPendingTasks();
+        }
+        
+        // 渲染今日需做
+        function renderAdminTodoList() {
+            const todoList = document.getElementById('admin-todo-list');
+            todoList.innerHTML = '';
+            
+            // 计算今日购买的商品数量
+            const today = new Date().toISOString().split('T')[0];
+            const todayPurchases = purchases.filter(p => p.purchaseDate.startsWith(today));
+            
+            if (todayPurchases.length > 0) {
+                const todoItem = document.createElement('div');
+                todoItem.className = 'item';
+                todoItem.innerHTML = `
+                    <h3>今日销售</h3>
+                    <p>今日共售出 ${todayPurchases.length} 件商品</p>
+                `;
+                todoList.appendChild(todoItem);
+            } else {
+                todoList.innerHTML = '<p>今日暂无销售记录</p>';
+            }
+        }
+        
+        // 渲染库存预警
+        function renderStockAlerts() {
+            const stockAlerts = document.getElementById('stock-alerts');
+            stockAlerts.innerHTML = '';
+            
+            const lowStockProducts = products.filter(p => p.stock <= 2);
+            
+            if (lowStockProducts.length > 0) {
+                lowStockProducts.forEach(product => {
+                    const alertItem = document.createElement('div');
+                    alertItem.className = 'item';
+                    alertItem.innerHTML = `
+                        <h3>${product.name}</h3>
+                        <p>库存: ${product.stock} (低于或等于2，需要补货)</p>
+                    `;
+                    stockAlerts.appendChild(alertItem);
+                });
+            } else {
+                stockAlerts.innerHTML = '<p>所有商品库存充足</p>';
+            }
+        }
+        
+        // 渲染管理员待审核任务
+        function renderAdminPendingTasks() {
+            const pendingTasksList = document.getElementById('admin-pending-tasks');
+            pendingTasksList.innerHTML = '';
+            
+            const pendingSubmissions = submissions.filter(sub => sub.status === 'pending');
+            
+            if (pendingSubmissions.length > 0) {
+                pendingSubmissions.forEach(sub => {
+                    const task = tasks.find(t => t.id === sub.taskId);
+                    if (task) {
+                        const taskItem = document.createElement('div');
+                        taskItem.className = 'item';
+                        taskItem.innerHTML = `
+                            <h3>${task.title}</h3>
+                            <p>${task.description}</p>
+                            <p>奖励: ${task.reward} 狗狗币${task.type === 'daily' ? ' (双倍奖励)' : ''}</p>
+                            <p>提交用户: ${sub.userId}</p>
+                            <div class="item-actions">
+                                <button class="btn-secondary" onclick="approveTask('${sub.id}')">通过</button>
+                                <button class="btn-danger" onclick="openTaskRejectModal('${sub.id}')">不通过</button>
+                            </div>
+                        `;
+                        pendingTasksList.appendChild(taskItem);
+                    }
+                });
+            } else {
+                pendingTasksList.innerHTML = '<p>暂无待审核任务</p>';
+            }
+        }
+        
+        // 打开任务拒绝模态框
+        function openTaskRejectModal(submissionId) {
+            currentRejectTaskId = submissionId;
+            document.getElementById('task-reject-modal').style.display = 'block';
+        }
+        
+        // 关闭任务拒绝模态框
+        function closeTaskRejectModal() {
+            document.getElementById('task-reject-modal').style.display = 'none';
+            document.getElementById('reject-reason').value = '';
+            currentRejectTaskId = '';
+        }
+        
+        // 确认拒绝任务
+        function confirmRejectTask() {
+            const reason = document.getElementById('reject-reason').value;
+            if (!reason) {
+                showNotification('请输入拒绝原因');
+                return;
+            }
+            
+            const submission = submissions.find(sub => sub.id === currentRejectTaskId);
+            if (submission) {
+                submission.status = 'rejected';
+                submission.rejectReason = reason;
+                saveData(STORAGE_KEYS.SUBMISSIONS, submissions);
+                renderAdminPendingTasks();
+                renderPendingTasks();
+                showNotification('任务已拒绝');
+                // 这里可以添加通知用户的功能
+            }
+            
+            closeTaskRejectModal();
+        }
+        
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+            document.getElementById('current-time').textContent = timeString;
+        }
+        
+        // 获取天气信息
+        function updateWeather() {
+            // 从中国天气网获取杭州当日天气
+            const url = 'http://www.weather.com.cn/data/sk/101210101.html';
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.weatherinfo) {
+                        const weather = data.weatherinfo;
+                        const weatherInfo = `${weather.weather} ${weather.temp}°C`;
+                        document.getElementById('current-weather').textContent = weatherInfo;
+                    } else {
+                        // 如果API调用失败，使用默认值
+                        document.getElementById('current-weather').textContent = '晴 16℃';
+                    }
+                })
+                .catch(error => {
+                    console.error('获取天气失败:', error);
+                    // 出错时使用默认值
+                    document.getElementById('current-weather').textContent = '晴 16℃';
+                });
+        }
+        
+        // 编辑主页通知
+        function editHomeMessage() {
+            const messageElement = document.getElementById('home-message');
+            const editorElement = document.getElementById('home-message-editor');
+            const contentElement = document.getElementById('message-content');
+            
+            // 获取当前内容
+            contentElement.value = messageElement.innerHTML;
+            
+            // 显示编辑器，隐藏原内容
+            messageElement.style.display = 'none';
+            editorElement.style.display = 'block';
+        }
+        
+        // 保存主页通知
+        function saveHomeMessage() {
+            const contentElement = document.getElementById('message-content');
+            const messageElement = document.getElementById('home-message');
+            const editorElement = document.getElementById('home-message-editor');
+            
+            // 保存内容
+            const content = contentElement.value;
+            messageElement.innerHTML = content;
+            
+            // 保存到localStorage
+            localStorage.setItem('homeMessage', content);
+            
+            // 隐藏编辑器，显示原内容
+            editorElement.style.display = 'none';
+            messageElement.style.display = 'block';
+            
+            showNotification('通知内容已保存');
+        }
+        
+        // 取消编辑主页通知
+        function cancelEditHomeMessage() {
+            const messageElement = document.getElementById('home-message');
+            const editorElement = document.getElementById('home-message-editor');
+            
+            // 隐藏编辑器，显示原内容
+            editorElement.style.display = 'none';
+            messageElement.style.display = 'block';
+        }
+        
+        // 加载主页通知
+        function loadHomeMessage() {
+            const savedMessage = localStorage.getItem('homeMessage');
+            if (savedMessage) {
+                document.getElementById('home-message').innerHTML = savedMessage;
+            }
+        }
+        
+        // 显示/隐藏编辑按钮
+        function updateEditButton() {
+            const editButton = document.getElementById('edit-message-btn');
+            if (currentUserId === '蛇蛇') {
+                editButton.style.display = 'block';
+            } else {
+                editButton.style.display = 'none';
+            }
+        }
+        
+        // 每小时检查一次过期任务
+        setInterval(checkExpiredTasks, 60 * 60 * 1000);
+        
+        // 每秒更新时间
+        setInterval(updateCurrentTime, 1000);
+        
+        // 初始化
+        function init() {
+            if (isLoggedIn) {
+                showMainContent();
+                updateUserInfo();
+                renderHome();
+                renderTasks();
+                renderProducts();
+                renderPendingTasks();
+                renderAdminProducts();
+                // 根据角色显示/隐藏管理员功能
+                updateAdminAccess();
+                // 检查过期任务
+                checkExpiredTasks();
+                // 绑定事件
+                bindEvents();
+                // 更新编辑按钮
+                updateEditButton();
+                // 加载主页通知
+                loadHomeMessage();
+                // 更新时间和天气
+                updateCurrentTime();
+                updateWeather();
+            } else {
+                showLoginPage();
+                // 绑定登录事件
+                bindLoginEvents();
+            }
+        }
+        
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
